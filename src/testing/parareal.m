@@ -1,20 +1,22 @@
 method = @(ode, y0, t_range, dt) fweuler(ode, y0, t_range, dt);
-y0 = 0.1;
+y0 = .1;
 ode = @(t,y) y;
 T = 5;
 dt = .1;
 
 num_para_its = 5;
-num_temporal_its = 50;
+num_temporal_its = T/dt;
 U = zeros(num_temporal_its+1, num_para_its+1);
 U(1,:) = y0;
 [t, U(:,1)] = method(ode, y0, [0, T], dt);
+old_G = U(:,1);
 
 for k=1:num_para_its
   for n=1:num_temporal_its % Correction iteration (Parallel capable)
     [~, G] = method(ode, U(n,k+1), t(n:n+1)', dt);
+    [~, G2] = method(ode, U(n,k), t(n:n+1)', dt);
     [~, F] = method(ode, U(n,k), t(n:n+1)', dt^2);
-    U(n+1,k+1) = G(end) + F(end) - U(n,k);
+    U(n+1,k+1) = G(end) + F(end) - G2(end);
   end
 end
 
