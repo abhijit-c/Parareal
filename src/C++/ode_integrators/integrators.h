@@ -20,5 +20,6 @@ class ode_system
 };
 
 int forward_euler(ode_system, double, double *);
+int rk4(ode_system, double, double *);
 
 #endif
