@@ -20,3 +20,18 @@ int forward_euler(ode_system sys, double dt, double *yf)
   }
   return 0;
 }
+
+int forward_euler_step(ode_system sys, double dt, double *yf)
+{
+  for (int k = 0; k < sys.dimension; k++)
+  {
+    yf[k] = sys.y0[k];
+  }
+
+  double dydt[sys.dimension];
+  sys.f(sys.t_init, yf, dydt);
+  for (int k = 0; k < sys.dimension; k++)
+  {
+    yf[k] = yf[k] + dt*dydt[k];
+  }
+}

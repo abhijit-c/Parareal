@@ -1,5 +1,6 @@
 #include <math.h>
 #include <stdio.h>
+#include <omp.h>
 #include "ode_integrators/integrators.h"
 
 int rhs(double t, double *yf, double *dydt)
@@ -23,6 +24,7 @@ int main()
 
   rk4(ode, .001, yf);
   printf("RK4: Computed: %f, error = %e\n", yf[0], exp(ode.t_final)-yf[0]);
+
 
   free(yf);
   free(ode.y0);
