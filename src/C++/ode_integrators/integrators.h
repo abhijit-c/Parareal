@@ -9,6 +9,7 @@
  */
 
 typedef std::function<int(double, double *, double *)> ode_rhs;
+typedef std::function<int(ode_system, double, double *)> integrator;
 
 class ode_system
 {
@@ -19,7 +20,15 @@ class ode_system
     ode_rhs f;
 };
 
+// Explicit Integrators.
 int forward_euler(ode_system, double, double *);
 int rk4(ode_system, double, double *);
+
+// Implicit Integrators.
+int backward_euler(ode_system, double, double *);
+int trapezoidal_rule(ode_system, double, double *);
+
+// Parareal Method.
+int parareal(ode_system, integrator, integrator, double *);
 
 #endif
