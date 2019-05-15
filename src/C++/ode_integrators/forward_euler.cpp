@@ -1,37 +1,15 @@
 #include "integrators.h"
 
-int forward_euler(ode_system sys, double dt, double *yf)
+int forward_euler(ode_system sys, double dt, Eigen::VectorXd &yf)
 {
-  for (int k = 0; k < sys.dimension; k++)
-  {
-    yf[k] = sys.y0[k];
-  }
-
-  double dydt[sys.dimension];
+  yf = sys.y0;
+  Eigen::VectorXd dydt(sys.dimension);
   double t = sys.t_init;
   while (t + dt/2 < sys.t_final)
   {
     sys.f(t, yf, dydt);
-    for (int k = 0; k < sys.dimension; k++)
-    {
-      yf[k] = yf[k] + dt*dydt[k];
-    }
+    yf = yf + dt*dydt;
     t = t + dt;
   }
   return 0;
-}
-
-int forward_euler_step(ode_system sys, double dt, double *yf)
-{
-  for (int k = 0; k < sys.dimension; k++)
-  {
-    yf[k] = sys.y0[k];
-  }
-
-  double dydt[sys.dimension];
-  sys.f(sys.t_init, yf, dydt);
-  for (int k = 0; k < sys.dimension; k++)
-  {
-    yf[k] = yf[k] + dt*dydt[k];
-  }
 }

@@ -1,12 +1,19 @@
 CXX = g++
-CXXFLAGS = -c -std=c++11 -O3 -march=native -fopenmp
+CXXFLAGS = -std=c++11 -O3 -march=native
+LIBFLAGS = -fopenmp -DEIGEN_DONT_PARALLELIZE
+DEBUG = -Wall -Werror
 
-TARGETS = $(basename $(wildcard *.cpp))
+default:
+	$(CXX) -c $(CXXFLAGS) $(LIBFLAGS) *.cpp
+	make combine --no-print-directory
 
-all : $(TARGETS)
+debug:
+	$(CXX) -c $(CXXFLAGS) $(LIBFLAGS) $(DEBUG) *.cpp
+	make combine --no-print-directory
 
-%:%.cpp *.h
-	$(CXX) $(CXXFLAGS) $< $(LIBS) -o $@.o
+combine:
+	ar cr lib_parareal.a *.o
+	make clean --no-print-directory
 
 clean:
 	-$(RM) *.o *~
