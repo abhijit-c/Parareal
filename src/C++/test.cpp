@@ -8,6 +8,7 @@
 #include "ode_integrators/integrators.h"
 
 typedef Eigen::VectorXd Evec;
+typedef Eigen::MatrixXd Emat;
 
 int rhs(double t, Evec &yf, Evec &dydt)
 {
@@ -22,25 +23,22 @@ int main()
   ode.y0 = Evec(1); ode.y0(0) = 1;
   ode.f = std::function<int(double, Evec&, Evec&)>(&rhs);
 
-  Evec yf(1); yf(0) = 0;
+  time_stepper course;
+  course.dt = .1;
+  course.F = std::function<int(ode_system, double, Evec &)>(&forward_euler);
+  course.F_steps = std::function<int(ode_system, double, Emat &)>(&forward_euler_steps);
 
+  time_stepper fine;
+  fine.dt = .1*.1;
+  fine.F = std::function<int(ode_system, double, Evec &)>(&forward_euler);
+  fine.F_steps = std::function<int(ode_system, double, Emat &)>(&forward_euler_steps);
+
+  Emat yf(ode.num_steps(.1), ode.dimension); 
   double tt = omp_get_wtime();
-  forward_euler(ode, .001, yf);
-  tt = omp_get_wtime() - tt;
-  printf("FW: Computed: %f, error = %e\n, in %f s\n", 
-      yf(0), exp(ode.t_final)-yf(0), tt);
 
-  Eigen::MatrixXd M ( ode.num_steps(.001), ode.dimension );
-  tt = omp_get_wtime(); 
-  forward_euler_steps(ode, .001, M);
-  tt = omp_get_wtime() - tt;
-  int k = M.rows();
-  printf("FW: Computed: %f, error = %e, in %f s\n", yf(0), 
-      exp(ode.t_final)-yf(0), tt);
+  parareal(ode, course, fine, yf);
 
-  tt = omp_get_wtime(); 
-  rk4(ode, .001, yf);
   tt = omp_get_wtime() - tt;
-  printf("RK4: Computed: %f, error = %e\n, in $f s\n", 
-      yf[0], exp(ode.t_final)-yf(0), tt);
+  int k = yf.rows();
+  printf("err=%e, computed in %f\n", exp(4) - yf(k-1,0), tt);
 }

@@ -55,6 +55,6 @@ int rk4(ode_system, double, Eigen::VectorXd &);
 int backward_euler(ode_system, double, Eigen::VectorXd &);
 
 // Parareal Method.
-int parareal(ode_system, time_stepper, time_stepper, Eigen::VectorXd &);
+int parareal(ode_system, time_stepper, time_stepper, Eigen::MatrixXd &);
 
 #endif
