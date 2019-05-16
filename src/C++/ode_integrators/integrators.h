@@ -1,8 +1,8 @@
 #ifndef INTEGRATORS_H_INCLUDED
 #define INTEGRATORS_H_INCLUDED
 
-#include <Eigen/Dense>
 #include <functional>
+#include "../Eigen/Dense"
 
 class ode_system; class time_stepper;
 

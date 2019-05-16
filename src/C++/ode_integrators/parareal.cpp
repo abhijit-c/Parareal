@@ -7,6 +7,7 @@ int parareal(ode_system sys,
              Eigen::MatrixXd &yf)
 {
   int P = omp_get_max_threads();
+  printf("%d\n", P);
   int D = sys.dimension, csteps = sys.num_steps(course.dt),
                          fsteps = sys.num_steps(fine.dt);
 
@@ -14,7 +15,7 @@ int parareal(ode_system sys,
 
   Eigen::MatrixXd ycourse = yf;
   Eigen::MatrixXd yfine(csteps+1, D); yfine.row(0) = sys.y0;
-  for (int k = 0; k < 5; k++)
+  for (int k = 0; k < 6; k++)
   {
     #pragma omp parallel for
     for (int n = 0; n < csteps-1; n++)

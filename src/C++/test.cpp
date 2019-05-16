@@ -1,11 +1,11 @@
 #include <iostream>
-#include <Eigen/Dense>
 
 #include <math.h>
 #include <stdio.h>
 #include <omp.h>
 
 #include "ode_integrators/integrators.h"
+#include "Eigen/Dense"
 
 typedef Eigen::VectorXd Evec;
 typedef Eigen::MatrixXd Emat;
@@ -24,12 +24,12 @@ int main()
   ode.f = std::function<int(double, Evec&, Evec&)>(&rhs);
 
   time_stepper course;
-  course.dt = 1;
+  course.dt = .5;
   course.F = std::function<int(ode_system, double, Evec &)>(&forward_euler);
   course.F_steps = std::function<int(ode_system, double, Emat &)>(&forward_euler_steps);
 
   time_stepper fine;
-  fine.dt = .0001;
+  fine.dt = .0000001;
   fine.F = std::function<int(ode_system, double, Evec &)>(&forward_euler);
   fine.F_steps = std::function<int(ode_system, double, Emat &)>(&forward_euler_steps);
 
