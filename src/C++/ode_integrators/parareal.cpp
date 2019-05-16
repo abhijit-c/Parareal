@@ -11,23 +11,25 @@ int parareal(ode_system sys,
                          fsteps = sys.num_steps(fine.dt);
 
   course.s_integrate(sys, yf);
-  Eigen::VectorXd temp;
+
   Eigen::MatrixXd ycourse = yf;
   Eigen::MatrixXd yfine(csteps+1, D); yfine.row(0) = sys.y0;
-  for (int k = 0; k < 3; k++)
+  for (int k = 0; k < 5; k++)
   {
-    //#pragma omp parallel for
+    #pragma omp parallel for
     for (int n = 0; n < csteps-1; n++)
     { //Compute yf(n) = fine(yf(n-1)) w/
       ode_system para = sys;
       para.t_init = sys.t_init + course.dt*n;
       para.t_final = sys.t_init + course.dt*(n+1);
       para.y0 = yf.row(n);
+      Eigen::VectorXd temp;
       fine.integrate(para, temp);
       yfine.row(n+1) = temp;
     }
     for (int n = 0; n < csteps-1; n++)
     { // Predict w/ course operator, correct with fine.
+      Eigen::VectorXd temp;
       ode_system para = sys;
       para.t_init = sys.t_init + course.dt*n;
       para.t_final = sys.t_init + course.dt*(n+1);
