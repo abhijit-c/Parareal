@@ -12,6 +12,7 @@ int forward_euler(ode_system sys, double dt, Eigen::VectorXd &yf)
     sys.f(t, yf, dydt);
     yf = yf + dt*dydt;
     t = t + dt;
+    printf("%f\n", t);
   }
   return 0;
 }

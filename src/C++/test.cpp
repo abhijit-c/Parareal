@@ -33,12 +33,18 @@ int main()
   fine.F = std::function<int(ode_system, double, Evec &)>(&forward_euler);
   fine.F_steps = std::function<int(ode_system, double, Emat &)>(&forward_euler_steps);
 
-  Emat yf(ode.num_steps(.1), ode.dimension); 
+  Emat yf(ode.num_steps(.1) + 1, ode.dimension); 
   double tt = omp_get_wtime();
 
   parareal(ode, course, fine, yf);
 
   tt = omp_get_wtime() - tt;
   int k = yf.rows();
-  printf("err=%e, computed in %f\n", exp(4) - yf(k-1,0), tt);
+  printf("%e w/ err=%e, computed in %f\n", yf(k-1,0), exp(4) - yf(k-1,0), tt);
+
+  Evec fw_yf(ode.dimension);
+  tt = omp_get_wtime();
+  fine.integrate(ode, fw_yf);
+  tt = omp_get_wtime() - tt;
+  printf("%e w/ err=%e, computed in %f\n", fw_yf(0), exp(4)-fw_yf(0), tt);
 }

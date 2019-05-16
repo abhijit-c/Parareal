@@ -22,7 +22,7 @@ class ode_system
     ode_rhs f;
     int num_steps(double dt)
     {
-      return 1 + (int) ceil( (t_final+dt/2-t_init)/dt );
+      return 1 + (int) floor( (t_final+dt/2-t_init)/dt );
     }
 };
 
