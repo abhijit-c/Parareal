@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++11 -O0 -march=native
+CXXFLAGS = -std=c++11 -O3 
 LIBFLAGS = -fopenmp -DEIGEN_DONT_PARALLELIZE
 OBJFILES = ode_integrators/lib_parareal.a
 DEBUG = -Wall -Werror
