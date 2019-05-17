@@ -38,9 +38,7 @@ class time_stepper
     }
     int integrate_allt(ode_system &sys, Eigen::MatrixXd &steps)
     {
-      printf("AH\n");
       F_allt(sys, dt, steps);
-      printf("AH\n");
       return 0;
     }
 };

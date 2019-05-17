@@ -35,7 +35,7 @@ int rk4_allt(ode_system &sys, double dt, Eigen::MatrixXd &steps)
     yt = yf + dt*k3;     sys.f(t + dt,     yt, k4);
 
     yf = yf + dt*( k1/6 + k2/3 + k3/3 + k4/6 ); steps.row(step) = yf;
-    t = t + dt;
+    t = t + dt; step = step + 1;
   }
   return 0;
 }

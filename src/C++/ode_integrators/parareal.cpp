@@ -6,9 +6,7 @@ int parareal(ode_system &sys, time_stepper course, time_stepper fine,
 {
   int D = sys.dimension, csteps = sys.num_steps(course.dt);
   /* Serially compute the course solution to sys */
-  printf("start integrate\n");
   course.integrate_allt(sys, yf);
-  printf("end integrate\n");
   /* Initialize containers for parareal */
   Eigen::MatrixXd ycourse = yf;
   Eigen::MatrixXd yfine(csteps, D); yfine.row(0) = sys.y0;

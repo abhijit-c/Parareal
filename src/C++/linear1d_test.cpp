@@ -70,19 +70,19 @@ int main(int argc, char **argv)
 
   time_stepper course; time_stepper fine;
   /* Forward Euler */
-  course.dt = .5;
+  course.dt = 2;
   course.F = std::function<int(ode_system&, double, Evec &)>(&forward_euler);
   course.F_allt = std::function<int(ode_system&, double, Emat &)>(&forward_euler_allt);
-  fine.dt = .00001;
+  fine.dt = .000001;
   fine.F = std::function<int(ode_system&, double, Evec &)>(&forward_euler);
   fine.F_allt = std::function<int(ode_system&, double, Emat &)>(&forward_euler_allt);
   test_method(ode, course, fine);
 
   /* rk4 Testing */
-  course.dt = .5;
+  course.dt = 2;
   course.F = std::function<int(ode_system&, double, Evec &)>(&rk4);
   course.F_allt = std::function<int(ode_system&, double, Emat &)>(&rk4_allt);
-  fine.dt = .00001;
+  fine.dt = .000001;
   fine.F = std::function<int(ode_system&, double, Evec &)>(&rk4);
   fine.F_allt = std::function<int(ode_system&, double, Emat &)>(&rk4_allt);
   test_method(ode, course, fine);
