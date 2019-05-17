@@ -2,7 +2,7 @@
 #include "integrators.h"
 #include <stdio.h>
 
-int forward_euler(ode_system sys, double dt, Eigen::VectorXd &yf)
+int forward_euler(ode_system &sys, double dt, Eigen::VectorXd &yf)
 {
   yf = sys.y0;
   Eigen::VectorXd dydt(sys.dimension);
@@ -16,11 +16,13 @@ int forward_euler(ode_system sys, double dt, Eigen::VectorXd &yf)
   return 0;
 }
 
-int forward_euler_steps(ode_system sys, double dt, Eigen::MatrixXd &steps)
+int forward_euler_allt(ode_system &sys, double dt, Eigen::MatrixXd &steps)
 {
+  printf("FW begin\n");
   Eigen::VectorXd yf(sys.dimension), dydt(sys.dimension);
 
   yf = sys.y0; steps.row(0) = sys.y0;
+  printf("Loop begin\n");
   // Temporal steps initialization
   int step = 1; double t = sys.t_init;
   while (t + dt/2 < sys.t_final)
@@ -29,5 +31,6 @@ int forward_euler_steps(ode_system sys, double dt, Eigen::MatrixXd &steps)
     steps.row(step) = yf;
     t = t + dt; step = step + 1;
   }
+  printf("Loop end\n");
   return 0;
 }

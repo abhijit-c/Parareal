@@ -1,40 +1,42 @@
 #include <omp.h>
-#include <iostream>
 #include "integrators.h"
 
-int parareal(ode_system sys, 
-             time_stepper course, time_stepper fine, 
-             Eigen::MatrixXd &yf)
+int parareal(ode_system &sys, time_stepper course, time_stepper fine, 
+             int para_its, Eigen::MatrixXd &yf)
 {
-  int P = omp_get_max_threads();
-  printf("%d\n", P);
-  int D = sys.dimension, csteps = sys.num_steps(course.dt),
-                         fsteps = sys.num_steps(fine.dt);
-
-  course.s_integrate(sys, yf);
-
+  int D = sys.dimension, csteps = sys.num_steps(course.dt);
+  /* Serially compute the course solution to sys */
+  printf("start integrate\n");
+  course.integrate_allt(sys, yf);
+  printf("end integrate\n");
+  /* Initialize containers for parareal */
   Eigen::MatrixXd ycourse = yf;
-  Eigen::MatrixXd yfine(csteps+1, D); yfine.row(0) = sys.y0;
-  for (int k = 0; k < 6; k++)
-  {
+  Eigen::MatrixXd yfine(csteps, D); yfine.row(0) = sys.y0;
+  for (int k = 0; k < para_its; k++)
+  { // Begin Parareal Steps
+    /* In parallel compute the fine iterates on top of the serial steps */
     #pragma omp parallel for
     for (int n = 0; n < csteps-1; n++)
-    { //Compute yf(n) = fine(yf(n-1)) w/
+    { 
+      /* Construct fine ODE */
       ode_system para = sys;
       para.t_init = sys.t_init + course.dt*n;
       para.t_final = sys.t_init + course.dt*(n+1);
       para.y0 = yf.row(n);
+      /* Solve and update yfine */
       Eigen::VectorXd temp;
       fine.integrate(para, temp);
       yfine.row(n+1) = temp;
     }
     for (int n = 0; n < csteps-1; n++)
     { // Predict w/ course operator, correct with fine.
-      Eigen::VectorXd temp;
+      /* Construct predictor ODE system */
       ode_system para = sys;
       para.t_init = sys.t_init + course.dt*n;
       para.t_final = sys.t_init + course.dt*(n+1);
       para.y0 = yf.row(n);
+      /* Correct with parareal iterative scheme */
+      Eigen::VectorXd temp;
       course.integrate(para, temp);
       yf.row(n+1) = temp+yfine.row(n+1)-ycourse.row(n+1);
       ycourse.row(n+1) = temp;
