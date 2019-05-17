@@ -1,0 +1,50 @@
+% --------------------------------------------------------------
+% Abhi's Standard math Preamble.
+% --------------------------------------------------------------
+ 
+% Document packages / layout
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry} %1 inch margins
+
+% Figure Packages
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{subcaption}
+\usepackage{wrapfig}
+\usepackage[export]{adjustbox} %center option in include graphics
+
+% Math Packages
+\usepackage{amsmath,amsthm,amssymb,mathrsfs,bm}
+\usepackage{mathtools}
+\usepackage{commath}
+\usepackage{esvect} %For derivatives of vectors \vec{u}' -> \vv{u}'
+
+% Code input 
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+% Quality of Life Packages
+\usepackage{enumerate}
+
+\newtheorem*{lemma*}{Lemma}
+\newtheorem*{theorem*}{Theorem}
+ 
+\begin{document}
+ 
+\title{An Investigation into Parareal}
+\author{Abhijit Chowdhary} 
+
+\maketitle
+
+\tableofcontents
+
+\input{./src/introduction.tex}
+\input{./src/parareal.tex}
+\input{./src/implementation.tex}
+\input{./src/efficiency.tex}
+\input{./src/convergence.tex}
+\input{./src/stability.tex}
+\input{./src/conclusion.tex}
+
+
+\end{document}
