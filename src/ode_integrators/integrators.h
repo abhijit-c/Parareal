@@ -55,5 +55,6 @@ int rk4_allt(ode_system&, double, Eigen::MatrixXd &);
 
 // Parareal Method.
 int parareal(ode_system&, time_stepper, time_stepper, int, Eigen::MatrixXd &);
+int pipelined_parareal(ode_system&, time_stepper, time_stepper, int, Eigen::MatrixXd &);
 
 #endif
