@@ -1,1 +1,79 @@
 \section{Convergence Analysis}
+
+Now down to the main point, we would like to analyze and confirm the convergence
+of the Parareal method. First we derive a theoretical result, and then confirm
+it through numerical expirements.
+
+\subsection{Theoretical Convergence}
+
+Suppose we have the following ordinary differential equation:
+
+\begin{equation*}
+  \begin{cases}
+    u' = f(t,u), \quad t > 0 \\
+    u(0) = u_0
+  \end{cases}
+\end{equation*}
+
+In addition suppose we have the course operator $\course(t^{n+1},t^n,u^n)$ and
+the fine operator $\fine(t^{n+1}, t^n, u^n)$ with the following properties:
+
+\begin{enumerate}
+  \item On $\course(t^{n+1},t^n,u^n)$:
+    \begin{itemize}
+      \item Suppose this operator has order $m$.
+      \item Suppose it's Lipschitz in the initial condition:
+        \[
+          \norm{\course(t^{n+1},t^n,u)-\course(t^{n+1},t^n,v)} \leq 
+          C\norm{u - v} 
+        \]
+        In particular we write $C = (1 + L \Delta t)$.
+    \end{itemize}
+  \item With respect to $\fine(t^{n+1}, t^n, u^n)$, we suppose it's accurate
+    enough to be assumed to be the true solution $u^*$. This means that if
+    $\course$ is accurate with order $m$ to the true solution, then it too will
+    be so to $\fine$.
+\end{enumerate}
+
+Then we can prove the following theorem: \cite{balarticle} \cite{fieldstalk}
+
+\begin{theorem*}
+  The parareal method with course operator $\course$ and fine operator $\fine$
+  has order of accuracy $mk$, where $k$ is the number of parareal iterations
+  made.
+\end{theorem*}
+\begin{proof}
+  We proceed via induction on $k$. Suppose $k = 1$, then it is trivial, this is
+  the course operator.
+
+  Now suppose for $k > n$, that we know:
+  \[
+    \norm{u(t^n) - u_k^n} \leq \norm{u_0}C(\Delta t)^{mk}
+  \]
+  We want to show that:
+  \[
+    \norm{u(t^n) - u_{k+1}^n} \leq \norm{u_0}C(\Delta t)^{m(k+1)}
+  \]
+  To proceed, recall that $\fine$ is assumed to be a good approximation for
+  $u(t^n)$, so we may write:
+  \begin{align*}
+    \norm{u(t^n) - u_{k+1}^n} & = \norm{\fine(u(t^{n-1})) -
+    \course(u^{n-1}_{k+1}) - \fine(u^{n-1}_k) + \course(u^{n-1}_k)} \\
+    & = \norm{\course(u(t^{n-1})) + \delta \course (u(t^{n-1}))  -
+    \course(u^{n-1}_{k+1}) - \delta \course(u^{n-1}_k)} \\
+    & \leq \norm{\course(u(t^{n-1})) - \course(u^{n-1}_{k+1})} + 
+    \norm{ \delta \course (u(t^{n-1})) - \delta \course(u^{n-1}_k)} \\
+    & \leq (1+L\Delta t)\norm{u(t^{n-1}) - u^{n-1}_{k+1}} + 
+    C(\Delta t)^{m+1}\norm{ u(t^{n-1}) - u^{n-1}_k} \\
+    & \leq (1+L\Delta t)\norm{u(t^{n-1}) - u^{n-1}_{k+1}} + 
+    C(\Delta t)^{m+1}(\Delta t)^{mk}\norm{ u_0 } \\
+    & \leq (1+L\Delta t)\norm{u(t^{n-1}) - u^{n-1}_{k+1}} + 
+    C(\Delta t)^{m(k+1)+1}\norm{ u_0 } \\
+  \end{align*}
+  Therefore, we can say that $\norm{u(t^n) - u_{k+1}^n} \leq \mathcal{O}(\Delta
+  t^{m(k+1)})$.
+\end{proof}
+
+\subsection{Numerical Results and Validation}
+
+
