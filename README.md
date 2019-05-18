@@ -11,8 +11,8 @@ parareal algorithm:
     - Implement in OpenMP
     - Optimize with pipelining.
     - Observe how choices with course and fine propagators affect runtime.
-- Numerical Analysis Goals:
     - Understand and derive theoretical efficiency limits.
+- Numerical Analysis Goals:
     - Understand how Parareal's stability changes under propagator choices.
     - Derive convergence results under specific cases.
 
