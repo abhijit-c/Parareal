@@ -8,12 +8,12 @@ it through numerical expirements.
 
 Suppose we have the following ordinary differential equation:
 
-\begin{equation*}
+\begin{equation}
   \begin{cases}
     u' = f(t,u), \quad t > 0 \\
     u(0) = u_0
   \end{cases}
-\end{equation*}
+\end{equation}
 
 In addition suppose we have the course operator $\course(t^{n+1},t^n,u^n)$ and
 the fine operator $\fine(t^{n+1}, t^n, u^n)$ with the following properties:
@@ -35,20 +35,21 @@ the fine operator $\fine(t^{n+1}, t^n, u^n)$ with the following properties:
     be so to $\fine$.
 \end{enumerate}
 
-Then we can prove the following theorem: \cite{balarticle} \cite{fieldstalk}
+Then we can prove the following theorem:
 
 \begin{theorem*}
   The parareal method with course operator $\course$ and fine operator $\fine$
-  has order of accuracy $mk$, where $k$ is the number of parareal iterations
-  made.
+  has order of accuracy $mk$, where $k-1$ is the number of parareal iterations
+  made. \cite{balarticle} \cite{fieldstalk}
 \end{theorem*}
 \begin{proof}
-  We proceed via induction on $k$. Suppose $k = 1$, then it is trivial, this is
-  the course operator.
+  We proceed via induction on $k$ and $n$. Suppose $k = 1$, then it is trivial,
+  this is the course operator, and for $n = 0$, this is the initial condition
+  which we know to any accuracy.
 
-  Now suppose for $k > n$, that we know:
+  Now suppose for $k,n > 1$, that we know:
   \[
-    \norm{u(t^n) - u_k^n} \leq \norm{u_0}C(\Delta t)^{mk}
+    \norm{u(t^n) - u_k^n} \leq \norm{u_0}C(\Delta t)^{mk}, 
   \]
   We want to show that:
   \[
@@ -70,8 +71,10 @@ Then we can prove the following theorem: \cite{balarticle} \cite{fieldstalk}
     & \leq (1+L\Delta t)\norm{u(t^{n-1}) - u^{n-1}_{k+1}} + 
     C(\Delta t)^{m(k+1)+1}\norm{ u_0 } \\
   \end{align*}
-  Therefore, we can say that $\norm{u(t^n) - u_{k+1}^n} \leq \mathcal{O}(\Delta
-  t^{m(k+1)})$.
+  At this point, note that the left hand term is the approximation of $u$ at the
+  previous time step, which we can assume to also be of the order $m(k+1)$.
+  Therefore, we can say that $\norm{u(t^n) - u_{k+1}^n} = \mathcal{O}(\Delta
+  t^{m(k+1)})$, completing our inductive step.
 \end{proof}
 
 \subsection{Numerical Results and Validation}
