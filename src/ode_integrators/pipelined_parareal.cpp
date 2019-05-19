@@ -50,7 +50,7 @@ int pipelined_parareal(ode_system &sys, time_stepper course, time_stepper fine,
         temp_sys.y0 = yf.row(p);
         omp_set_lock(&(lock[p]));
         fine.integrate(temp_sys, y_temp);
-        delta_y.row(p+1) = y_temp - ycourse.row(p+1);
+        delta_y.row(p+1) = y_temp.transpose() - ycourse.row(p+1);
         omp_unset_lock(&(lock[p]));
 
         #pragma omp ordered

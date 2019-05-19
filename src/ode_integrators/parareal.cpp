@@ -1,5 +1,5 @@
-#include <omp.h>
 #include "integrators.h"
+#include <omp.h>
 
 int parareal(ode_system &sys, time_stepper course, time_stepper fine, 
              int para_its, Eigen::MatrixXd &yf)
@@ -34,9 +34,10 @@ int parareal(ode_system &sys, time_stepper course, time_stepper fine,
       para.t_final = sys.t_init + course.dt*(n+1);
       para.y0 = yf.row(n);
       /* Correct with parareal iterative scheme */
-      Eigen::VectorXd temp;
+      Eigen::VectorXd temp(D);
       course.integrate(para, temp);
-      yf.row(n+1) = temp+yfine.row(n+1)-ycourse.row(n+1);
+      temp = temp.transpose() + yfine.row(n+1) - ycourse.row(n+1);
+      yf.row(n+1) = temp;
       ycourse.row(n+1) = temp;
     }
   }

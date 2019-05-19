@@ -8,6 +8,8 @@ class ode_system; class time_stepper;
 
 // int ode(double t, Eigen::VectorXd y, Eigen::VectorXd &dydt)
 typedef std::function<int(double,Eigen::VectorXd &,Eigen::VectorXd &)> ode_rhs;
+// int ode(double t, Eigen::VectorXd y, Eigen::VectorXd &dydt)
+typedef std::function<int(double,Eigen::VectorXd &,Eigen::MatrixXd &)> ode_jac;
 // int integrator(ode_system sys, double dt, Eigen::VectorXd &yf)
 typedef std::function<int(ode_system&,double,Eigen::VectorXd &)> ode_intg;
 // int step_integrator(ode_system sys, double dt, Eigen::MatrixXd &yf)
@@ -20,6 +22,7 @@ class ode_system
     double t_init, t_final;
     Eigen::VectorXd y0;
     ode_rhs f;
+    ode_jac J;
     int num_steps(double dt)
     {
       return 1 + (int) ceil( (t_final-t_init)/dt - 1/2);
