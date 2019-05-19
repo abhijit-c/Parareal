@@ -36,10 +36,14 @@ int parareal(ode_system &sys, time_stepper course, time_stepper fine,
       /* Correct with parareal iterative scheme */
       Eigen::VectorXd temp(D);
       course.integrate(para, temp);
-      temp = temp.transpose() + yfine.row(n+1) - ycourse.row(n+1);
-      yf.row(n+1) = temp;
+      yf.row(n+1) = temp.transpose() + yfine.row(n+1) - ycourse.row(n+1);
       ycourse.row(n+1) = temp;
     }
   }
+  printf("FINE\n");
+  std::cout << yfine << std::endl;
+  printf("FINE\nCOURSE\n");
+  std::cout << ycourse << std::endl;
+  printf("COURSE\n");
   return 0;
 }

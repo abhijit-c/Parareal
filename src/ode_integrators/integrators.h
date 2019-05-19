@@ -2,6 +2,7 @@
 #define INTEGRATORS_H_INCLUDED
 
 #include <functional>
+#include <iostream>
 #include "../Eigen/Dense"
 
 class ode_system; class time_stepper;

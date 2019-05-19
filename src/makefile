@@ -9,5 +9,8 @@ all: $(patsubst %.cpp, %.out, $(wildcard *.cpp))
 	$(CXX) $(CXXFLAGE) $(LIBFLAGS) $< $(OBJFILES) -o $@ -lm
 clean:
 	rm *.out
+remake:
+	make clean
+	make
 
 .PHONY: all, clean
