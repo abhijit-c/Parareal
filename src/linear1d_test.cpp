@@ -38,18 +38,58 @@ void test_method(ode_system &ode, time_stepper course, time_stepper fine)
   tt = omp_get_wtime();
   parareal(ode, course, fine, 1, yf);
   tt = omp_get_wtime() - tt;
-  std::cout << yf << std::endl;
+  //std::cout << yf << std::endl;
   printf("Parareal: %e, w/ err %e, in %fs\n", 
       yf(csteps-1,0), abs(true_sol-yf(csteps-1,0)), tt);
 
-  // Pipelined Parareal Solver
+  //Pipelined Parareal Solver
   Emat yfp(csteps, ode.dimension);
   tt = omp_get_wtime();
-  pipelined_parareal(ode, course, fine, 1, yfp);
+  pipelined_parareal(ode, course, fine, 4, yfp);
   tt = omp_get_wtime() - tt;
-  std::cout << yfp << std::endl;
+  //std::cout << yfp << std::endl;
   printf("Pipelined Parareal: %e, w/ err %e, in %fs\n", 
-      yf(csteps-1,0), abs(true_sol-yfp(csteps-1,0)), tt);
+      yfp(csteps-1,0), abs(true_sol-yfp(csteps-1,0)), tt);
+}
+
+void write_parareal(ode_system &ode, time_stepper course, time_stepper fine)
+{
+  int csteps = ode.num_steps(course.dt);
+  for (int k = 0; k < csteps - 1; k++)
+  {
+    printf("Starting Parareal-%d solve\n", k);
+    Emat yf(csteps, ode.dimension);
+    parareal(ode, course, fine, k, yf);
+    FILE* fd = NULL;
+    char filename[256];
+    snprintf(filename, 256, "Graphical/Data/linear1d_fw%02d.out", k);
+    fd = fopen(filename,"w+");
+    if(NULL == fd) {
+      printf("Error opening file \n");
+      return;
+    }
+    for(int i = 0; i < csteps; ++i) { fprintf(fd, "%f\n", yf(i)); }
+    fclose(fd);
+  }
+
+}
+
+void write_fine(ode_system &ode, time_stepper course, time_stepper fine)
+{
+  int fsteps = ode.num_steps(fine.dt);
+  printf("Beginning fine solve, %d steps\n", fsteps);
+  Emat yf(fsteps, ode.dimension);
+  fine.integrate_allt(ode, yf);
+  FILE* fd = NULL;
+  char filename[256];
+  snprintf(filename, 256, "Graphical/Data/linear1d_fine.out");
+  fd = fopen(filename,"w+");
+  if(NULL == fd) {
+    printf("Error opening file \n");
+    return;
+  }
+  for(int i = 0; i < fsteps; ++i) { fprintf(fd, "%f\n", yf(i)); }
+  fclose(fd);
 }
 
 int main(int argc, char **argv)
@@ -62,14 +102,16 @@ int main(int argc, char **argv)
 
   time_stepper course; time_stepper fine;
   // Forward Euler 
-  course.dt = 0.5;
+  course.dt = .5;
   course.F = std::function<int(ode_system&, double, Evec &)>(&forward_euler);
   course.F_allt = std::function<int(ode_system&, double, Emat &)>(&forward_euler_allt);
-  fine.dt = .0000001;
+  fine.dt = .00000001;
   fine.F = std::function<int(ode_system&, double, Evec &)>(&forward_euler);
   fine.F_allt = std::function<int(ode_system&, double, Emat &)>(&forward_euler_allt);
   printf("Forward Euler tests:\n");
-  test_method(ode, course, fine);
+  //write_parareal(ode, course, fine);
+  write_fine(ode, course, fine);
+  //test_method(ode, course, fine);
 
   
   /*

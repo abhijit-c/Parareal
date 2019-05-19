@@ -11,6 +11,6 @@ clean:
 	rm *.out
 remake:
 	make clean
-	make
+	make -j
 
 .PHONY: all, clean
