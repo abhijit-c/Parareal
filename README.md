@@ -32,5 +32,7 @@ First, you must compile the parareal library, to do so cd into
 
 - Confirm convergence analysis with plots.
 - Write implicit euler solver, and compare results numerically.
-- Write up parallel efficiency analysis.
 - Test Scalability (strong and weak).
+- Write up parallel efficiency analysis.
+- Detail Parareal algorithm with pseudocode.
+- Write up quick slides for presentation.
