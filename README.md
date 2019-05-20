@@ -30,6 +30,4 @@ First, you must compile the parareal library, to do so cd into
 
 ## Todo
 
-- Test Scalability (strong and weak).
 - Test Stability empirically (with implicit euler if time)
-- Write up quick slides for presentation.
