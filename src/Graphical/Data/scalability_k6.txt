@@ -1,0 +1,57 @@
+Fine computed in 0.455242s
+Using 1 processors
+1.519281
+Using 2 processors
+0.778219
+Using 3 processors
+0.542872
+Using 4 processors
+0.380832
+Using 5 processors
+0.326272
+Using 6 processors
+0.272139
+Using 7 processors
+0.217871
+Using 8 processors
+0.217878
+Using 9 processors
+0.217251
+Using 10 processors
+0.163566
+Using 11 processors
+0.163558
+Using 12 processors
+0.163481
+Using 13 processors
+0.163464
+Using 14 processors
+0.115150
+Using 15 processors
+0.109389
+Using 16 processors
+0.109311
+Using 17 processors
+0.109331
+Using 18 processors
+0.109332
+Using 19 processors
+0.109334
+Using 20 processors
+0.110181
+Using 21 processors
+0.109349
+Using 22 processors
+0.109997
+Using 23 processors
+0.109323
+Using 24 processors
+0.109343
+Using 25 processors
+0.109296
+Using 26 processors
+0.109929
+Using 27 processors
+0.109262
+Using 28 processors
+0.059408
