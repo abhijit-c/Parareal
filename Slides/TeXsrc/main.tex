@@ -1,0 +1,70 @@
+% --------------------------------------------------------------
+% Abhi's Standard math Preamble.
+% --------------------------------------------------------------
+ 
+% Document packages / layout
+\documentclass[12pt]{beamer}
+\usetheme{AnnArbor}
+
+% Figure Packages
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{subcaption}
+\usepackage{wrapfig}
+\usepackage[export]{adjustbox} %center option in include graphics
+
+% Math Packages
+\usepackage{amsmath,amsthm,amssymb,mathrsfs,bm}
+\usepackage{mathtools}
+\usepackage{commath}
+\usepackage{esvect} %For derivatives of vectors \vec{u}' -> \vv{u}'
+
+% Code input 
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+% Quality of Life Packages
+\usepackage{enumerate}
+
+\newcommand{\course}{\mathcal{G}}
+\newcommand{\fine}{\mathcal{F}}
+
+\newtheorem*{lemma*}{Lemma}
+\newtheorem*{theorem*}{Theorem}
+ 
+\title{An Investigation into Parareal}
+\author{Abhijit Chowdhary} 
+\institute{New York University}
+\date{May 2019}
+
+\begin{document}
+ 
+\frame{\titlepage}
+
+\begin{frame}
+  \frametitle{The Problem}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Pseudocode}
+  \begin{algorithmic}
+    \Require $y_0$ and course and fine solvers $\course$, $\fine$.
+    \State $y_c \gets \course(t_f, t_0, y_0)$.\Comment{Coursely approximate
+      solution}
+    \State $y \gets y_c$.
+    \While{$\textrm{iter} < \textrm{max\_iter}\ \&\&$ not converged}
+      \For{$n = 0 \to P$}\Comment{Parallel capable}
+        \State $y_f(n) = \fine(t_{n+1},t_n,y(n))$.\Comment{Note FSAL property}
+        \State $\delta y(n) = y_f(n) - y(n)$.\Comment{corrector term.}
+      \EndFor
+      \For{$n = 0 \to P$}
+        \State $v = \course(t_{n+1},t_n,y(n))$.\Comment{Predict.}
+        \State $y(n) = v + \delta y(n)$.\Comment{Correct.}
+      \EndFor
+    \EndWhile
+  \end{algorithmic}
+\end{frame}
+
+
+
+\end{document}
