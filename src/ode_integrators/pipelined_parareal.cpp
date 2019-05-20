@@ -38,8 +38,8 @@ int pipelined_parareal(ode_system &sys, time_stepper course, time_stepper fine,
     } // END initial initial solve NOWAIT
 
     for (int k = 0; k < para_its; k++)
-    { // BEGIN parareal iterations
-      #pragma omp for ordered 
+    { // BEGIN parareal itera tions
+      #pragma omp for ordered nowait
       for (int p = 0; p < N; p++)
       { //BEGIN processor p computation
         ode_system temp_sys = sys;
