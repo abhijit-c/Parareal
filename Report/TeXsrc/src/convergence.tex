@@ -79,4 +79,42 @@ Then we can prove the following theorem:
 
 \subsection{Numerical Results and Validation}
 
+Here we seek to confirm the theoretical order derived in the last section (from
+\cite{balarticle} \cite{fieldstalk}). To see a clear example, consier the Euler
+methods introduced back in section \ref{sec:euler}. Recall that the explicit
+Euler method is of order $1$, so theoretically if we have a fine method of high
+enough order, we should see a method whose order is $k$, for an order $k$
+Parareal. And indeed, as we expect, we do indeed see such such results, see
+figure \ref{fig:conv_fw} for the numerical plots.
+
+\begin{figure}[!htb]
+  \centering
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includegraphics[width=.515\textwidth]
+      {./resources/converge_fwsols}
+    \includegraphics[width=.475\textwidth]
+      {./resources/converge_fwerrs}
+  \end{subfigure}%
+  \caption{The figure on the left is showing the resulting solutions to the ODE
+    $u' = u, u(0) = 1$ for $t \in [0, 4]$, and the right is showing the errors
+    under the $1$ norm. Critically, this plot reveals that our implementation of
+    Parareal conforms to the theoreical convergence rate, which validates our
+    method. The last iterate has strange behavior, but this is because I could
+    not decrease the accuracy of the fine integrator (forward Euler) anymore
+    without running out of memory.}\label{fig:conv_fw}
+\end{figure}
+
+Using this information, we might begin to consider how can we leverage this $mk$
+convergence rate. It's immediately clear, that if we want $k$ to be as small as
+possible (as noted in the efficiency section), that we want $m$ to be as large
+as possible. However, $m$ corresponds to the order of the course integrator, and
+typically we want this integrator to be as cheap and inexpensive as possible.
+Therefore, we have an optimization problem here between the course integrator
+and number of parareal iterations. Of course, all of this is assuming that the
+fine integrator performs to the desired accuracy, otherwise the former is
+useless. 
+
+
+
 
