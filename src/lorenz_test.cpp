@@ -41,13 +41,13 @@ void test_method(ode_system &ode, time_stepper course, time_stepper fine)
   tt = omp_get_wtime();
   parareal(ode, course, fine, 4, yf);
   tt = omp_get_wtime() - tt;
-  printf("Parareal Solution Computed in %fs\n", tt);
+  //printf("Parareal Solution Computed in %fs\n", tt);
   std::cout << yf << std::endl;
   
   // Parareal Solver
-  tt = omp_get_wtime();
+  //tt = omp_get_wtime();
   //pipelined_parareal(ode, course, fine, 4, yf);
-  tt = omp_get_wtime() - tt;
+  //tt = omp_get_wtime() - tt;
   //printf("Parareal Solution Computed in %fs\n", tt);
   //std::cout << yf << std::endl;
 }
@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 
   time_stepper course; time_stepper fine;
   /* rk4 Testing */
-  course.dt = .1;
+  course.dt = .05;
   course.F = std::function<int(ode_system&, double, Evec &)>(&rk4);
   course.F_allt = std::function<int(ode_system&, double, Emat &)>(&rk4_allt);
   fine.dt = .0001;
