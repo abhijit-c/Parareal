@@ -115,6 +115,27 @@ and number of parareal iterations. Of course, all of this is assuming that the
 fine integrator performs to the desired accuracy, otherwise the former is
 useless. 
 
+For example, see figure \ref{fig:conv_rk} for a examination of the errors of
+parareal underneath the Runge-Kutta methods. In addition, see figure
+\ref{fig:order_conf} for a more confirmation of the $mk$ order, for the
+Runge-Kutta methods.
 
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=.85\textwidth]{./resources/runge_kutta_parareal}
+  \caption{This figure is showing the resulting errors in the parareal
+    approximation to to the ODE $u' = -\frac{1}{2}u, u(0) = 1$ for $t \in [0,
+    4]$ under the $1$ norm. This plot reveals how, given a higher order course
+    method, the parareal is able to make larger jumps of accuracy as the number
+    of parareal iterations increases.}\label{fig:conv_rk}
+\end{figure}
 
-
+\begin{figure}[!htb]
+  \centering
+  \includegraphics[width=.75\textwidth]{./resources/rk2_order_conf}
+  \caption{This figure shows that how, under refinement of $\Delta t$, the third
+    parareal iteration of the Runge Kutta $2$ method has order roughly
+    $5$. This is confirmed by taking the error of $\Delta t/2$ and shifting it
+    by the order. They don't exactly land on top of each other, but I believe
+    that to be an artifact of the approximation not being exact.}\label{fig:order_conf}
+\end{figure}

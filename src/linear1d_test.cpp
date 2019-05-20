@@ -36,9 +36,9 @@ void test_method(ode_system &ode, time_stepper course, time_stepper fine)
   // Parareal Solver
   Emat yf(csteps, ode.dimension);
   tt = omp_get_wtime();
-  parareal(ode, course, fine, 1, yf);
+  parareal(ode, course, fine, 4, yf);
   tt = omp_get_wtime() - tt;
-  //std::cout << yf << std::endl;
+  std::cout << yf << std::endl;
   printf("Parareal: %e, w/ err %e, in %fs\n", 
       yf(csteps-1,0), abs(true_sol-yf(csteps-1,0)), tt);
 
@@ -47,7 +47,7 @@ void test_method(ode_system &ode, time_stepper course, time_stepper fine)
   tt = omp_get_wtime();
   pipelined_parareal(ode, course, fine, 4, yfp);
   tt = omp_get_wtime() - tt;
-  //std::cout << yfp << std::endl;
+  std::cout << yfp << std::endl;
   printf("Pipelined Parareal: %e, w/ err %e, in %fs\n", 
       yfp(csteps-1,0), abs(true_sol-yfp(csteps-1,0)), tt);
 }
@@ -105,13 +105,13 @@ int main(int argc, char **argv)
   course.dt = .5;
   course.F = std::function<int(ode_system&, double, Evec &)>(&forward_euler);
   course.F_allt = std::function<int(ode_system&, double, Emat &)>(&forward_euler_allt);
-  fine.dt = .00000001;
+  fine.dt = .00001;
   fine.F = std::function<int(ode_system&, double, Evec &)>(&forward_euler);
   fine.F_allt = std::function<int(ode_system&, double, Emat &)>(&forward_euler_allt);
   printf("Forward Euler tests:\n");
   //write_parareal(ode, course, fine);
-  write_fine(ode, course, fine);
-  //test_method(ode, course, fine);
+  //write_fine(ode, course, fine);
+  test_method(ode, course, fine);
 
   
   /*

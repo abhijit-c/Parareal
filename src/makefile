@@ -6,9 +6,9 @@ DEBUG = -Wall -Werror
 
 all: $(patsubst %.cpp, %.out, $(wildcard *.cpp))
 %.out: %.cpp makefile
-	$(CXX) $(CXXFLAGE) $(LIBFLAGS) $< $(OBJFILES) -o $@ -lm
+	$(CXX) $(CXXFLAGS) $(LIBFLAGS) $< $(OBJFILES) -o $@ -lm
 clean:
-	rm *.out
+	rm -f *.out
 remake:
 	make clean
 	make -j

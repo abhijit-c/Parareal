@@ -1,5 +1,42 @@
 \section{Efficiency Analysis}
 
+Here we try to analyze the speedup of Parareal analytically, and then through
+scalability studies conducted on the supercomputer Prince, here at NYU. 
+
 \subsection{Theoretical Results}
+
+We try to directly estimate the speedup of the Naive OpenMP implementation. We
+denote our speedup $S$ by: (\cite{fieldstalk} slide 17)
+\begin{equation*}
+  S = \frac{\text{Time taken by fine solver}}{\text{Parareal time}}
+\end{equation*}
+Let the time taken by the fine and course solvers respectively be denoted by
+$T_f$ and $T_g$. Furthermore, suppose we have the optimal amount of processors
+$P$, such that $\Delta t = T/P$, where $T$ is the time to integrate up to.
+
+Considering this, at each step parareal makes a predictor and corrector
+computation. The predictor is just a run of the course solver, costing $PT_g$.
+The corrector has two parts, the fine and course portion. The fine portion is
+parallelized optimally, and therefore costs just $T_f$, instead of $PT_f$.
+However, the course portion of the corrector takes advantage of the
+\textit{first same as last} property, and doesn't have to be counted sepreately.
+Recall, also, before the parareal iteration, we make an initial guess using one
+course solve, $PT_g$. Therefore, for a parareal with $k$ iterations it would
+have speedup:
+\[
+  S = \frac{PT_f}{PT_g + k(PT_g + T_f)} 
+  = \frac{1}{\frac{T_g}{T_f} + k(\frac{T_g}{T_f} + \frac{1}{P})} 
+  = \frac{1}{\frac{T_g}{T_f}(1+k) + \frac{k}{P}} 
+\]
+Notice, under the limit:
+\[
+  \lim_{P \to \infty} S = \frac{1}{\frac{T_g}{T_f}(1+k)} = \frac{T_f}{T_g(1+k)}
+\]
+Supposing we have the idealized case of $k = 1$, then we would find that this
+would result in speedup $\frac{T_f}{2T_g}$, which, given that $T_g << T_f$,
+could be significant. However, in practice, $k$ has to be taken to be large
+enough so that $S$ isn't too great. This is one of the first indicators we have
+of why $T_g << T_f$ must be true. In general, knowing that $T_g \leq T_f
+\implies S \leq \frac{1}{k+1}$, which is somewhat dismal. 
 
 \subsection{Scalability}

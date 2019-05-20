@@ -1,1 +1,29 @@
 \section{Parareal}
+
+We would like to solve the autonomous ordinary differential equation:
+\begin{equation*}
+  \begin{cases}
+    u'(t) = f(u), & t \in [t_0, t_f] \\
+    u(t_0) = u_0
+  \end{cases}
+\end{equation*}
+where $f : \mathbb{R}^d \to \mathbb{R}^d$ and $u: \mathbb{R} \to \mathbb{R}^d$.
+
+Parareal is an iterative scheme to approximate $u$ for the above, which can be
+derived from the concept of \textit{multiple shooting} methods. The idea behind
+these methods are to turn the problem into a nonlinear optimization problem,
+which then can be solved via Newton-Raphson. \cite{gandervandewalle}
+
+Take our time domain $[t_0, t_f]$ and partition it into $N$ pieces $0 = t_0 <
+\dots < t_N = t_f$. Looking specifically at the interval $[t_n, t_{n+1}]$, we
+pose the new ODE:
+\[
+  \begin{cases}
+    u'_n = f(u_n), & t \in [t_n, t_{n+1}] \\
+    u(t_n) = U_n
+  \end{cases}
+\]`
+where $U_n$ is such that $U_n - u_{n-1}(t_n, U_{n-1}) = 0$, i.e. the initial
+condition satisfies the solution to the previous time slice. The conditions on
+$U_i$ form a nonlinear system $F(U) = 0$, which we can approximate using
+Newton-Raphson, so recieve the iteration $U^{k+1} = U^k - J_F^{-1}(U^k)F(U^k)$.

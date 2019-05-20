@@ -47,13 +47,13 @@ class time_stepper
     }
 };
 
-// Explicit Integrators.
-
 // Euler Methods
 int forward_euler(ode_system&, double, Eigen::VectorXd &);
 int forward_euler_allt(ode_system&, double, Eigen::MatrixXd &);
 
 // Runge-Kutta Methods.
+int rk2(ode_system&, double, Eigen::VectorXd &);
+int rk2_allt(ode_system&, double, Eigen::MatrixXd &);
 int rk4(ode_system&, double, Eigen::VectorXd &);
 int rk4_allt(ode_system&, double, Eigen::MatrixXd &);
 
