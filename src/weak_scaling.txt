@@ -1,0 +1,50 @@
+Using 2 processors to solve up to T = 2.000000
+0.102248
+Using 3 processors to solve up to T = 3.000000
+0.133732
+Using 4 processors to solve up to T = 4.000000
+0.193594
+Using 5 processors to solve up to T = 5.000000
+0.275572
+Using 6 processors to solve up to T = 6.000000
+0.302886
+Using 7 processors to solve up to T = 7.000000
+0.316826
+Using 8 processors to solve up to T = 8.000000
+0.399562
+Using 9 processors to solve up to T = 9.000000
+0.495348
+Using 10 processors to solve up to T = 10.000000
+0.680782
+Using 11 processors to solve up to T = 11.000000
+0.710718
+Using 12 processors to solve up to T = 12.000000
+0.802339
+Using 13 processors to solve up to T = 13.000000
+0.985150
+Using 14 processors to solve up to T = 14.000000
+1.008852
+Using 15 processors to solve up to T = 15.000000
+1.106610
+Using 16 processors to solve up to T = 16.000000
+1.300027
+Using 17 processors to solve up to T = 17.000000
+1.193056
+Using 18 processors to solve up to T = 18.000000
+1.301069
+Using 19 processors to solve up to T = 19.000000
+1.600353
+Using 20 processors to solve up to T = 20.000000
+1.597105
+Using 21 processors to solve up to T = 21.000000
+1.806518
+Using 22 processors to solve up to T = 22.000000
+1.802002
+Using 23 processors to solve up to T = 23.000000
+1.603706
+Using 24 processors to solve up to T = 24.000000
+1.690745
+Using 25 processors to solve up to T = 25.000000
+1.704956
+Using 26 processors to solve up to T = 26.000000
+1.801306
