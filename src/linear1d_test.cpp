@@ -43,7 +43,7 @@ void write_parareal(ode_system &ode, time_stepper course, time_stepper fine)
     parareal(ode, course, fine, k, yf);
     FILE* fd = NULL;
     char filename[256];
-    snprintf(filename, 256, "Graphical/Data/linear1d_fw%02d.out", k);
+    snprintf(filename, 256, "../PlottingCode/Data/linear1d_fw%02d.out", k);
     fd = fopen(filename,"w+");
     if(NULL == fd) {
       printf("Error opening file \n");
