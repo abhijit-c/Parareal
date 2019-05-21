@@ -3,10 +3,11 @@ import numpy as np
 
 plt.figure()
 
-P = np.transpose(np.arange(1,26))
-data = np.loadtxt(f'Data/weak_scaling.txt')
-plt.loglog(P, data, 's-', label='Computed Scaling')
-plt.loglog(P, data[0]*P, label='Linear Scaling')
+P = np.transpose(np.arange(2,21))
+data = np.loadtxt(f'Data/pipeline_weak.txt')
+plt.loglog(P, data[:,0], 's-', label='Computed Scaling')
+plt.loglog(P, data[:,1], 's-', label='Pipelined Computed Scaling')
+plt.loglog(P, data[0,0]*P, 's-', label='Linear Scaling')
 
 plt.title('Weak Scaling Study for Parareal w/ 28 Processors')
 plt.xlabel('Number of Processors')

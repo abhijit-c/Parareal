@@ -89,11 +89,12 @@ amount of processors, working on a similar sized problem. See figure
   \includegraphics[width=.8\textwidth]{./resources/weak_scaling}
   \caption{}\label{fig:weak_scaling}
 \end{figure}
-In total, we see that the weak scaling of Parareal is very poor. This is likely
-by Amadahl's law. When we increase the amount of processors working, what
-happens is that the fine portion is computed in the same amount of time, but the
-amount of points in general increase. This implies that the serial portion of
-the computation will increase linearly in the number of points, which is exactly
-what we see in the figure. This implies that this problem scales poorly in the
-number of coarse points chosen. Ideally we would like to choose this to be as
-small as possible, i.e. we want the $\Delta t$ of $\coarse$ to be large.
+We see that the Weak Scaling of parareal is alright, seeming to stay roughly
+constant, or atleast sublinear as we increase the number of processors doing
+equal amounts of work. Note, this can only be true if $T_g << T_f$, otherwise we
+will be bounded by Amadahl's law. When we increase the amount of processors
+working, what happens is that the fine portion is computed in the same amount of
+time, but the amount of points in general increase. This implies that the serial
+portion of the computation will increase linearly in the number of points, so if
+the course computation is not very cheap with respect to the fine computation,
+we will lose the weak scaling performance.

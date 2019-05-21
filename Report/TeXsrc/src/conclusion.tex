@@ -2,12 +2,14 @@
 
 In conclusion, we find that Parareal is indeed capable of providing significant
 speedup to our general numerical methods for ordinary differential equations.
-However, as we scale our hardware larger and larger, we might run into runtime
-issues, due to the poor weak scaling of the algorithm. Furthermore, it's
-difficult to determine what's the correct choice of $\fine$ and $\coarse$, since
-the stability function is not easy to analyze in general, and because there's an
-unfomfortable optimization problem between wanting $\coarse$ to be as accurate
-as possible, while making sure that the ratio $T_f/T_g$ is as large as possible.
+however, it's difficult to determine what's the correct choice of $\fine$ and
+$\coarse$, since the stability function is not easy to analyze in general, and
+because there's an unfomfortable optimization problem between wanting $\coarse$
+to be as accurate as possible, while making sure that the ratio $T_f/T_g$ is as
+large as possible. In addition, for systems with strong requirements on $\Delta
+t$, such as for the heat equation, we might have no choice but to make $\Delta
+t$ small, and thus making $T_g$ large with respect to $T_f$. This implies that
+for these system, there might be better approaches to parallelism.
 
 Some points to personally reflect on this project:
 \begin{itemize}
