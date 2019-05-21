@@ -44,8 +44,7 @@
 
 \begin{frame}
   \frametitle{Problem Statement}
-  We would like to numerically solve the autonomous ordinary differential
-  equation:
+  We would like to numerically solve the ordinary differential equation:
   \begin{equation*}
     \begin{cases}
       u'(t) = f(t, u), & t \in [t_0, t_f] \\
@@ -61,24 +60,24 @@
 \begin{frame}
   \frametitle{Serial Methods}
   \begin{itemize}
-    \item <1-> Forward and Backward Euler:
+    \item Forward and Backward Euler:
       \[
         u_{n+1} = u_n +  h f(t, u_n), u_n + h f(t,u_{n+1})
       \]
-    \item <2-> Linear Multistep Methods
+    \item Linear Multistep Methods
       \[
         \sum_k \alpha_k y_{n+k} = h\sum_k\beta_k f(t_{n+k},y_{n+k})
       \]
-    \item <3-> Runge Kutta Methods
-    \item <4-> Etc.
+    \item Runge Kutta Methods
+    \item Etc.
   \end{itemize}
 \end{frame}
 
 \begin{frame}
   \frametitle{Parallel Techniques}
   \begin{alertblock}{Problem!}
-    Most of the previous methods are iterative, depending on the previously
-    computed values.
+    Most of the previous methods are iterative, with dependency on the
+    previously computed values.
   \end{alertblock}
   Not embarrassingly parallel... We have to get creative.
 \end{frame}
@@ -108,7 +107,8 @@
   be a fine operator of high order. Then Parareal iteration is:
   \[
     \lambda_{n+1}^{k+1} = \mathcal{G}(t_{n+1},t_n,\lambda_n^{k+1}) + 
-    \mathcal{F}(t_{n+1},t_n,\lambda_n^k) - \mathcal{G}(t_{n+1},t_n,\lambda_n^k)
+    \left[ \mathcal{F}(t_{n+1},t_n,\lambda_n^k) -
+      \mathcal{G}(t_{n+1},t_n,\lambda_n^k) \right]
   \]
   \begin{block}{Parallel Potential}
     Notice! The $\mathcal{F}$ term depends only on the previous solutions, which
@@ -192,7 +192,7 @@
   \]
   Note:
   \[
-    \lim_{P \to \infty} \frac{1}{\frac{T_g}{T_f}(1+k) + \frac{k}{P}} =
+    S_\infty = \lim_{P \to \infty} \frac{1}{\frac{T_g}{T_f}(1+k) + \frac{k}{P}} =
     \frac{T_f}{T_g(1+k)}
   \]
 \end{frame}
@@ -211,6 +211,19 @@
   Therefore, we have this uncomfortable optimization problem. We want $k$ small
   for speedup, but large for order. If we make $m$ large instead, then the ratio
   $T_f/T_g$ becomes smaller...
+\end{frame}
+
+\begin{frame}
+  \frametitle{Forward Euler Convergence}
+  \begin{center}
+    \includegraphics[width=.9\textwidth]{./resources/converge_fwerrs}
+  \end{center}
+\end{frame}
+\begin{frame}
+  \frametitle{Runge-Kutta Convergence}
+  \begin{center}
+    \includegraphics[width=.9\textwidth]{./resources/runge_kutta_parareal}
+  \end{center}
 \end{frame}
 
 \begin{frame}
