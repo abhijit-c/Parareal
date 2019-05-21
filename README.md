@@ -28,8 +28,3 @@ First, you must compile the parareal library, to do so cd into
 `src/ode_integrators/` and then call `make`. This will construct the object file
 `lib_parareal.a`. Now anytime you want to use the library, include the
 `integrators.h` file, and link `lib_parareal.a`.
-
-## Todo
-
-- Test Stability empirically (with implicit euler if time)
-- Finish TeX'ing up the Report.
