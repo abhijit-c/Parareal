@@ -1,1 +1,12 @@
 \section{Introduction}
+
+The parareal algorithm was originally proposed by Lions, Maday, and Turinici
+\cite{original} as a numerical method to solve ordinary differential equations
+that was parallel capable over the time domain. Here we intend to given a
+overview of the method, and it's properties. In section 2 we describe the
+parareal iteration, which later in 3 we discuss how to implement efficiently
+using the parallel library OpenMP. Then in 4 we discuss the parallel efficiency
+of this implementation, and measure the scalability of it in a high performance
+computing context. Then in 5 and 6 we examine the analytic properties of the
+method, deriving stability criteria and measuring and deriving theoretical
+convergence rates.

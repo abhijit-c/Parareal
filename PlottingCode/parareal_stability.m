@@ -1,34 +1,68 @@
-function parareal_stability(n, k)
-  N = 100;
-  [MDT, mdt] = meshgrid(linspace(-4, 0, N), linspace(-2, 2, N));
+% k = 0
+N = 100;
+[M, T] = meshgrid(linspace(-5, 5, N), linspace(0, 5, N));
 
-  fe = @(z) (1 + z);
-  be = @(z) (1 + z)^(-1);
+roots = abs( (M.*T + 1) );
+root_cond = zeros(N, N);
 
-  s = MDT./mdt;
-  roots = zeros(N,N);
-  for j = 0:k
-    roots = roots + nchoosek(n,j) .* ...
-            (fe(mdt).^s-be(MDT)).^j .* ...
-            be(MDT).^(n-j) ;
-  end
-
-  roots = abs(roots);
-  root_cond = zeros(N, N);
-
-  for j=1:N
-    for k=1:N
-      root_cond(j,k) = 0;
-      if roots(j,k) <= 1
-        root_cond(j,k) = 1;
-      end
+for j=1:N
+  for k=1:N
+    root_cond(j,k) = 0;
+    if roots(j,k) <= 1
+      root_cond(j,k) = 1;
     end
   end
-
-  figure();
-  surf(MDT, mdt, root_cond); colormap('gray');
-  view(0, 90);
-  title('Absolute Stability region of Parareal.');
-  xlabel('\mu \Delta t'); ylabel('\mu \delta t');
-  %set(gca, 'fontsize', 16);
 end
+
+figure();
+surf(M, T, root_cond); colormap('gray');
+view(0, 90);
+title('Forward Euler Parareal, $k = 0$, $\delta t = \Delta t^2$', 'Interpreter', 'latex');
+xlabel('\mu'); ylabel('\Delta t');
+%set(gca, 'fontsize', 16);
+
+% k = 1
+N = 100;
+[M, T] = meshgrid(linspace(-5, 5, N), linspace(0, 5, N));
+
+roots = (1+M.*T).^2 + 2.*M.*T.*(M.*(T.^3)+2.*T-1).*(1+M.*T);
+root_cond = zeros(N, N);
+
+for j=1:N
+  for k=1:N
+    root_cond(j,k) = 0;
+    if roots(j,k) <= 1
+      root_cond(j,k) = 1;
+    end
+  end
+end
+
+figure();
+surf(M, T, root_cond); colormap('gray');
+view(0, 90);
+title('Forward Euler Parareal, $k = 1$, $\delta t = \Delta t^2$', 'Interpreter', 'latex');
+xlabel('\mu'); ylabel('\Delta t');
+%set(gca, 'fontsize', 16);
+
+% k = 2
+N = 100;
+[M, T] = meshgrid(linspace(-5, 5, N), linspace(0, 5, N));
+
+roots = abs( (M.*(T.^2) + 1).^4 );
+root_cond = zeros(N, N);
+
+for j=1:N
+  for k=1:N
+    root_cond(j,k) = 0;
+    if roots(j,k) <= 1
+      root_cond(j,k) = 1;
+    end
+  end
+end
+
+figure();
+surf(M, T, root_cond); colormap('gray');
+view(0, 90);
+title('Forward Euler Parareal, $k = 2$, $\delta t = \Delta t^2$', 'Interpreter', 'latex');
+xlabel('\mu'); ylabel('\Delta t');
+%set(gca, 'fontsize', 16);

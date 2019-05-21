@@ -22,8 +22,42 @@ pose the new ODE:
     u'_n = f(u_n), & t \in [t_n, t_{n+1}] \\
     u(t_n) = U_n
   \end{cases}
-\]`
+\]
 where $U_n$ is such that $U_n - u_{n-1}(t_n, U_{n-1}) = 0$, i.e. the initial
 condition satisfies the solution to the previous time slice. The conditions on
 $U_i$ form a nonlinear system $F(U) = 0$, which we can approximate using
-Newton-Raphson, so recieve the iteration $U^{k+1} = U^k - J_F^{-1}(U^k)F(U^k)$.
+Newton-Raphson, so we recieve the iteration $U^{k+1} = U^k -
+J_F^{-1}(U^k)F(U^k)$. As it turns out, as seen in Gander and Vandewalle
+\cite{gandervandewalle}, that we can actually change this into the form:
+\[
+  \begin{cases}
+    U_0^{k+1} = u_0 \\
+    U_{n+1}^{k+1} = u_n(t_{n+1}, U_n^k) + \frac{\partial u_n}{\partial
+    U_n}(t_{n+1}, U_n^k)(U_n^{k+1} - U_n^k)
+  \end{cases}
+\]
+If we were to then, call $u_n(t_{n+1}, U_n^k) = \fine(t_{n+1}, t_n, U_n^k)$
+where $F$ is some near truth integrator and were to approximate the second
+term with another integrator $\coarse(t_{n+1},t_n,U_n^{k+1}) -
+\coarse(t_{n+1},t_n, U_n^k)$, then we would recieve the iteration:
+\[
+  \begin{cases}
+    U_0^{k+1} = u_0 \\
+    U_{n+1}^{k+1} = \fine(t_{n+1}, t_n, U_n^k) + \coarse(t_{n+1},t_n,U_n^{k+1})
+    - \coarse(t_{n+1},t_n, U_n^k)
+  \end{cases}
+\]
+This is precisely what we call parareal iteration. Alternatively, you can think
+about this as the predictor-corrector scheme:
+\[
+  \begin{cases}
+    U_0^{k+1} = u_0 \\
+    U_{n+1}^{k+1} = \coarse(t_{n+1},t_n,U_n^{k+1}) + \left(\fine(t_{n+1}, t_n,
+    U_n^k) - \coarse(t_{n+1},t_n, U_n^k)\right)
+  \end{cases}
+\]
+Regardless, we notice that this iteration, which is an approximation to our
+solution as $k \to \infty$, has a term which is decoupled from the current
+iteration step, $\fine$. Furthermore, it satisfies a \textit{first same as last}
+property with the coarse integrators $\coarse$. The idea behind the parareal
+method is to take advantage of both of these properties.

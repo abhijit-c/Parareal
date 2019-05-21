@@ -10,8 +10,9 @@ parareal algorithm:
 - Efficiency goals:
     - Implement in OpenMP
     - Optimize with pipelining.
-    - Observe how choices with course and fine propagators affect runtime.
+    - Observe how choices with course and fine propagators affect speedup.
     - Understand and derive theoretical efficiency limits.
+    - Examine weak and strong scaling of the algorithm.
 - Numerical Analysis Goals:
     - Understand how Parareal's stability changes under propagator choices.
     - Derive convergence results under specific cases.
@@ -27,7 +28,3 @@ First, you must compile the parareal library, to do so cd into
 `src/ode_integrators/` and then call `make`. This will construct the object file
 `lib_parareal.a`. Now anytime you want to use the library, include the
 `integrators.h` file, and link `lib_parareal.a`.
-
-## Todo
-
-- Test Stability empirically (with implicit euler if time)

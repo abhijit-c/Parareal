@@ -1,26 +1,132 @@
 \section{Implementation}
 
+Here we discuss two main implementations of the Parareal algorithm using OpenMP.
+
 \subsection{Naive OpenMP}
 
-\begin{algorithm}
-  \caption{Parareal Algorithm}
+From the basic description of Parareal, we see that the fine propagator is able
+to be computed in parallel, so the main idea here is to parallelize the for loop
+corresponding to the fine propagator. See algorithm \ref{alg:parareal} for the
+pseudocode. A quick description is as follows:
+\begin{enumerate}[(1)]
+  \item Lines $(1-2)$ describe the initial coarse approximation of the system.
+    It's important that these solutions are loaded into both $y_c$ and $y$,
+    since they're needed for the next bit to satisfy the first same as last
+    property.
+  \item Lines $(4-8)$ are the computation of the fine approximation, and the
+    construction of the corrector term $\delta y$. There are a few implicit
+    assumptions here:
+    \begin{itemize}
+      \item We assume that $y(n)$ hold the previous $\lambda_n^k$.
+      \item We assume that $y_c(n)$ already holds the value $\coarse(t_{n+1},
+        t_n, \lambda_n^k)$.
+    \end{itemize}
+    Both of these assumptions are true atleast for the first iteration due to
+    our considerations in the first part. Furthermore, this part is completely
+    dependent on previously computed information, and has no previous dependence
+    on previous iterates, and therefore is embarrassingly parallel.
+  \item Lines $(9-12)$ actually do the parareal iteration, we predict via line
+    $10$, and we correct via our previously computed $\delta y(n)$.
+\end{enumerate}
+\begin{breakablealgorithm}
+  \caption{Naive Parallel Parareal Algorithm}
   \label{alg:parareal}
-  \begin{algorithmic}
-    \Require $y_0$ and course and fine solvers $\course$, $\fine$.
-    \State $y_c \gets \course(t_f, t_0, y_0)$.\Comment{Coursely approximate
+  \begin{algorithmic}[1]
+    \Require $y_0$ and coarse and fine solvers $\coarse$, $\fine$.
+    \State $y_c \gets \coarse(t_f, t_0, y_0)$.\Comment{Coarsely approximate
       solution}
     \State $y \gets y_c$.
     \While{$\textrm{iter} < \textrm{max\_iter}\ \&\&$ not converged}
-      \For{$n = 0 \to P$}\Comment{Parallel capable}
-        \State $y_f(n) = \fine(t_{n+1},t_n,y(n))$.\Comment{Note FSAL property}
-        \State $\delta y(n) = y_f(n) - y(n)$.\Comment{corrector term.}
+      \State \#pragma omp parallel for
+      \For{$n = 0 \to P$}
+        \State $y_f(n) = \fine(t_{n+1},t_n,y(n))$.
+        \State $\delta y(n) = y_f(n) - y_c(n)$.\Comment{corrector term. FSAL}
       \EndFor
       \For{$n = 0 \to P$}
-        \State $v = \course(t_{n+1},t_n,y(n))$.\Comment{Predict.}
-        \State $y(n) = v + \delta y(n)$.\Comment{Correct.}
+        \State $y_c(n) = \coarse(t_{n+1},t_n,y(n))$.\Comment{Predict.}
+        \State $y(n) = y_c(n) + \delta y(n)$.\Comment{Correct.}
       \EndFor
     \EndWhile
   \end{algorithmic}
-\end{algorithm}
+\end{breakablealgorithm}
 
 \subsection{Pipelined OpenMP}
+
+There's some clear problems with the naive implementation of Parareal.
+Primarily, let's examine the coarse computation portions, lines $1$ and $10$ of
+algorithm $\ref{alg:parareal}$. Both of these portions iteratively compute the
+coarse approximation to the solution, but they lock up all processors while they
+do so. In fact, once we've computed the approximation for the $n$th node, we can
+immediately continue, instead of waiting for the rest of the serial computation
+to finish. This is referred to in literature (Ruprecht \cite{ruprecht}) as
+\textit{pipelining}. In fact, this would happen naturally in the MPI
+implementation, but since I had decided to use OpenMP, we have to tackle this
+problem.
+
+The solution here is actually to mimic an MPI enviornment by wrapping the
+entire parareal algorithm in a parallel region. The idea is that thread $p$ has
+the job of processing the fine and coarse operators, and later solution at
+position $t_{p+1}$. While we don't have the cost of MPI communication across
+processes, we still need to appropriately place locks around our reads and
+writes to prevent race conditions. A brief description of this new algorithm,
+whose pseudocode is provided in algorithm \ref{alg:pparareal}, follows:
+\begin{enumerate}[(1)]
+  \item Line $1$ encases the whole algorithm in a parallel region, essentially
+    mimicing a MPI centric algorithm, except in shared memory. 
+  \item Lines $(2-8)$ are the initial coarse approximation of the solution.
+    Note, that for the $p$th process, we actually integrate from $t_0 \to t_p$,
+    in order to compute the coarse solution at $t_{p+1}$. We could instead have
+    process $0$ do the whole integration, and then communicate those values to
+    all processes, but it was observed then that this would be no better than
+    the serial computation in the naive algorithm. Note that the nowait
+    statement allows to continue immediately, which is the \textit{pipelining}
+    that we desire.
+  \item Lines $(12-16)$ describe the parallel computation of $\fine$ and $\delta
+    y$. Note, it's important to have locks around the points from which we read
+    and write, since across this algorithm thread $p$ reads from position $p$
+    and writes into position $p+1$. A point of note is that if we could refine
+    this algorithm so that it read and wrote into only position $p$, save for
+    one location, it would vastly improve.
+  \item Lines $(17-22)$ describe the predictor and corrector step of parareal,
+    accompanied with the necessary locks. Note that this is surrounded in a
+    ordered directive, which is necessary since to compute the predictor step
+    for $p+1$, we need $y(p)$. Therefore, we have no choice but to do this
+    iteratively. However, because of the nowait clause on line $10$, we aren't
+    forced to wait for the other threads to finish before continuing on.
+\end{enumerate}
+\begin{breakablealgorithm}
+  \caption{Pipelined Parallel Parareal Algorithm (source Ruprecht \cite{ruprecht})}
+  \label{alg:pparareal}
+  \begin{algorithmic}[1]
+    \Require $y_0$ and coarse and fine solvers $\coarse$, $\fine$.
+    \State \#pragma omp parallel\Comment{Enclose whole algorithm in parallel region}
+    \State \#pragma omp for nowait 
+    \For{$p = 0 \to P$}
+      \If{$p \neq 0$}
+        \State $y(p) = \coarse(t_{p},t_0,y_0)$.\Comment{Repeated work across
+        threads, but $\coarse$ is cheap.}
+      \EndIf
+      \State $y_c(p+1) = \coarse(t_{p+1},t_p, y(p))$.
+    \EndFor
+    \While{$\textrm{iter} < \textrm{max\_iter}\ \&\&$ not converged}
+      \State \#pragma omp for ordered nowait\Comment{nowait critical to avoid
+      waiting for threads $> p$}
+      \For{$p = 0 \to P$}
+        \State omp\_set\_lock($p$) \Comment{Read lock.}
+        \State $\textrm{temp} = \fine(t_{p+1},t_p,y(p))$.
+        \State omp\_unset\_lock($p$) and then omp\_set\_lock($p+1$)\Comment{Write lock.}
+        \State $y_f(p+1) = \textrm{temp},\ \delta y(p+1) = y_f(p+1)-y_c(p+1)$.
+        \State omp\_unset\_lock($p+1$)
+        \State \#pragma omp ordered \Comment{ordered because $y(p)$ depends on
+        $y(p-1)$.}
+        \Indent
+          \State omp\_set\_lock($p$) \Comment{Read lock.}
+          \State $\textrm{temp} = \coarse(t_{p+1},t_p,y(p))$.
+          \State omp\_unset\_lock($p$) and then omp\_set\_lock($p+1$)\Comment{Write lock.}
+          \State $y_c(p+1) = \textrm{temp},\ y(p+1) = y_c(p+1) + \delta y(p+1)$.
+          \State omp\_unset\_lock($p+1$)
+        \EndIndent
+      \EndFor
+    \EndWhile
+  \end{algorithmic}
+\end{breakablealgorithm}

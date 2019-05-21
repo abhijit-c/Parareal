@@ -1,1 +1,29 @@
 \section{Conclusion}
+
+In conclusion, we find that Parareal is indeed capable of providing significant
+speedup to our general numerical methods for ordinary differential equations.
+However, as we scale our hardware larger and larger, we might run into runtime
+issues, due to the poor weak scaling of the algorithm. Furthermore, it's
+difficult to determine what's the correct choice of $\fine$ and $\coarse$, since
+the stability function is not easy to analyze in general, and because there's an
+unfomfortable optimization problem between wanting $\coarse$ to be as accurate
+as possible, while making sure that the ratio $T_f/T_g$ is as large as possible.
+
+Some points to personally reflect on this project:
+\begin{itemize}
+  \item I should not have used OpenMP to implement parareal. In the end, I was
+    limited in the number of processors I could test on due to it, and the
+    pipelined efficient implementation was just mimicing MPI-like behavior
+    anyway. If I had to do this again, I would use a combination of MPI and
+    OpenMP, MPI would split the domain over different compute nodes, and OpenMP
+    would internally handle the parallel computation of the fine integrations
+    assigned to that node.
+\item I ran out of time to test implicit integrators, and how their stability
+  regions functioned. I found it difficult to implement them, since the way I
+  had written my code isolated the actual $f$ of the ODE $u' = f(t,u)$, and
+  thus if I wanted implicit solvers, I had to solve a nonlinear optimization
+  problem, which was too much trouble.
+\item I wanted to look at generalizations and improvements of parareal, such as
+  PFASST, which takes a spectral deffered corrections approach to the iteration,
+  and another which adapts it to a multigrid scheme, but I ran out of time.
+\end{itemize}

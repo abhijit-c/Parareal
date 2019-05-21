@@ -5,10 +5,10 @@ plt.figure()
 
 P = np.transpose(np.arange(1,26))
 data = np.loadtxt(f'Data/weak_scaling.txt')
-plt.plot(P, data, 's-', label='Computed Scaling')
-plt.plot(P, data[0]*P, label='Linear Scaling')
+plt.loglog(P, data, 's-', label='Computed Scaling')
+plt.loglog(P, data[0]*P, label='Linear Scaling')
 
-plt.title('Weak Scaling Study for Parareal')
+plt.title('Weak Scaling Study for Parareal w/ 28 Processors')
 plt.xlabel('Number of Processors')
 plt.ylabel('Time taken in seconds')
 plt.legend(loc='upper left', bbox_to_anchor=(0, 1),
