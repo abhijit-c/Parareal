@@ -141,6 +141,9 @@
 
 \begin{frame}
   \frametitle{Pseudocode}
+  $\lambda_{n+1}^{k+1} = \mathcal{G}(t_{n+1},t_n,\lambda_n^{k+1}) + \left[
+    \mathcal{F}(t_{n+1},t_n,\lambda_n^k) - \mathcal{G}(t_{n+1},t_n,\lambda_n^k)
+    \right]$
   \begin{algorithmic}
     \Require $y_0$ and course and fine solvers $\course$, $\fine$.
     \State $y_c \gets \course(t_f, t_0, y_0)$.\Comment{Coarsely approximate
@@ -260,7 +263,20 @@
   \end{center}
 \end{frame}
 
-
+\begin{frame}
+  \frametitle{Conclusions}
+  \begin{itemize}
+    \item <1-> We see significant speedup as well as proper weak and strong
+      scaling of parareal, supposing ideal choices of $\mathcal{F},
+      \mathcal{G}$.
+    \item <2-> The algorithm is very picky with choices of $\mathcal{G}$ and
+      $\mathcal{F}$, and choices of $\Delta t$ and $\delta t$ vary wildly from
+      problem to problem.
+    \item <3-> To generalize to a larger scale, the code should be formulated
+      first with MPI to distribute work across nodes, and then with OpenMP to
+      parallelize locally.
+  \end{itemize}
+\end{frame}
 
 
 \end{document}
