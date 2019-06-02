@@ -7,13 +7,14 @@
 
 class ode_system; class time_stepper;
 
-// int ode(double t, Eigen::VectorXd y, Eigen::VectorXd &dydt)
+// Functional typedefs
+
+// Functions describing ode system.
 typedef std::function<int(double,Eigen::VectorXd &,Eigen::VectorXd &)> ode_rhs;
-// int ode(double t, Eigen::VectorXd y, Eigen::VectorXd &dydt)
 typedef std::function<int(double,Eigen::VectorXd &,Eigen::MatrixXd &)> ode_jac;
-// int integrator(ode_system sys, double dt, Eigen::VectorXd &yf)
+
+// Functions describing temporal integrator.
 typedef std::function<int(ode_system&,double,Eigen::VectorXd &)> ode_intg;
-// int step_integrator(ode_system sys, double dt, Eigen::MatrixXd &yf)
 typedef std::function<int(ode_system&,double,Eigen::MatrixXd &)> ode_intg_allt;
 
 class ode_system
@@ -60,5 +61,6 @@ int rk4_allt(ode_system&, double, Eigen::MatrixXd &);
 // Parareal Method.
 int parareal(ode_system&, time_stepper, time_stepper, int, Eigen::MatrixXd &);
 int pipelined_parareal(ode_system&, time_stepper, time_stepper, int, Eigen::MatrixXd &);
+
 
 #endif
