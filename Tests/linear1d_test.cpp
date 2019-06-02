@@ -87,7 +87,7 @@ int main(int argc, char **argv)
   course.dt = 0.5;
   course.F = std::function<int(ode_system&, double, Evec &)>(&forward_euler);
   course.F_allt = std::function<int(ode_system&, double, Emat &)>(&forward_euler_allt);
-  fine.dt = .000001;
+  fine.dt = .0000001;
   fine.F = std::function<int(ode_system&, double, Evec &)>(&forward_euler);
   fine.F_allt = std::function<int(ode_system&, double, Emat &)>(&forward_euler_allt);
 
