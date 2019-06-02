@@ -1,8 +1,7 @@
-#include <math.h>
-#include "integrators.h"
-#include <stdio.h>
+#include "forward_euler.h"
 
-int forward_euler(ode_system &sys, double dt, Eigen::VectorXd &yf)
+inline int 
+forward_euler(ode_system &sys, double dt, Eigen::VectorXd &yf)
 {
   yf = sys.y0;
   Eigen::VectorXd dydt(sys.dimension);
@@ -16,7 +15,8 @@ int forward_euler(ode_system &sys, double dt, Eigen::VectorXd &yf)
   return 0;
 }
 
-int forward_euler_allt(ode_system &sys, double dt, Eigen::MatrixXd &steps)
+inline int 
+forward_euler_allt(ode_system &sys, double dt, Eigen::MatrixXd &steps)
 {
   Eigen::VectorXd yf(sys.dimension), dydt(sys.dimension);
 

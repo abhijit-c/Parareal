@@ -1,12 +1,12 @@
 CXX = g++
 CXXFLAGS = -std=c++11 -O3 
-LIBFLAGS = -fopenmp -DEIGEN_DONT_PARALLELIZE
-OBJFILES = ode_integrators/lib_parareal.a
+LIBS = -fopenmp -I ~/Git/Parareal/include/
+LIBFLAGS = -DEIGEN_DONT_PARALLELIZE 
 DEBUG = -Wall -Werror
 
 all: $(patsubst %.cpp, %.out, $(wildcard *.cpp))
 %.out: %.cpp makefile
-	$(CXX) $(CXXFLAGS) $(LIBFLAGS) $< $(OBJFILES) -o $@ -lm
+	$(CXX) $(CXXFLAGS) $(LIBS) $(LIBFLAGS) $< -o $@ -lm
 clean:
 	rm -f *.out
 remake:

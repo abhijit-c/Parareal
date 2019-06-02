@@ -1,7 +1,8 @@
-#include "integrators.h"
+#include "rk2.h"
 
 // RK2 a.k.a. the midpoint method.
-int rk2(ode_system &sys, double dt, Eigen::VectorXd &yf)
+inline int 
+rk2(ode_system &sys, double dt, Eigen::VectorXd &yf)
 {
   int D = sys.dimension;
   yf = sys.y0;
@@ -19,7 +20,8 @@ int rk2(ode_system &sys, double dt, Eigen::VectorXd &yf)
   return 0;
 }
 
-int rk2_allt(ode_system &sys, double dt, Eigen::MatrixXd &steps)
+inline int 
+rk2(ode_system &sys, double dt, Eigen::MatrixXd &steps)
 {
   int D = sys.dimension, step = 1;
   Eigen::VectorXd yf(D), yt(D), k1(D), k2(D);

@@ -1,4 +1,4 @@
-#include "integrators.h"
+#include "rk4.h"
 
 int rk4(ode_system &sys, double dt, Eigen::VectorXd &yf)
 {
@@ -20,7 +20,7 @@ int rk4(ode_system &sys, double dt, Eigen::VectorXd &yf)
   return 0;
 }
 
-int rk4_allt(ode_system &sys, double dt, Eigen::MatrixXd &steps)
+int rk4(ode_system &sys, double dt, Eigen::MatrixXd &steps)
 {
   int D = sys.dimension, step = 1;
   Eigen::VectorXd yf(D), yt(D), k1(D), k2(D), k3(D), k4(D);

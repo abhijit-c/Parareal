@@ -1,12 +1,13 @@
-#include <iostream>
-#include <fstream>
-
 #include <math.h>
 #include <stdio.h>
 #include <omp.h>
 
-#include "ode_integrators/integrators.h"
-#include "Eigen/Dense"
+#include <iostream>
+
+#include <Eigen/Dense>
+#include <Parareal/core.h>
+#include <Parareal/parareal.h>
+#include <Parareal/forward_euler.h>
 
 typedef Eigen::VectorXd Evec;
 typedef Eigen::MatrixXd Emat;
@@ -31,46 +32,6 @@ void test_method(ode_system &ode, time_stepper course, time_stepper fine)
   tt = omp_get_wtime() - tt;
   std::cout << yf << std::endl;
   printf("Time taken %f\n", tt);
-}
-
-void write_parareal(ode_system &ode, time_stepper course, time_stepper fine)
-{
-  int csteps = ode.num_steps(course.dt);
-  for (int k = 0; k < csteps - 1; k++)
-  {
-    printf("Starting Parareal-%d solve\n", k);
-    Emat yf(csteps, ode.dimension);
-    parareal(ode, course, fine, k, yf);
-    FILE* fd = NULL;
-    char filename[256];
-    snprintf(filename, 256, "../PlottingCode/Data/linear1d_fw%02d.out", k);
-    fd = fopen(filename,"w+");
-    if(NULL == fd) {
-      printf("Error opening file \n");
-      return;
-    }
-    for(int i = 0; i < csteps; ++i) { fprintf(fd, "%f\n", yf(i)); }
-    fclose(fd);
-  }
-
-}
-
-void write_fine(ode_system &ode, time_stepper course, time_stepper fine)
-{
-  int fsteps = ode.num_steps(fine.dt);
-  printf("Beginning fine solve, %d steps\n", fsteps);
-  Emat yf(fsteps, ode.dimension);
-  fine.integrate_allt(ode, yf);
-  FILE* fd = NULL;
-  char filename[256];
-  snprintf(filename, 256, "Graphical/Data/linear1d_fine.out");
-  fd = fopen(filename,"w+");
-  if(NULL == fd) {
-    printf("Error opening file \n");
-    return;
-  }
-  for(int i = 0; i < fsteps; ++i) { fprintf(fd, "%f\n", yf(i)); }
-  fclose(fd);
 }
 
 int main(int argc, char **argv)

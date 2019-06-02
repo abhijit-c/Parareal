@@ -1,9 +1,8 @@
-#ifndef INTEGRATORS_H_INCLUDED
-#define INTEGRATORS_H_INCLUDED
+#ifndef CORE_H_INCLUDED
+#define CORE_H_INCLUDED
 
+#include <Eigen/Core>
 #include <functional>
-#include <iostream>
-#include "../Eigen/Dense"
 
 class ode_system; class time_stepper;
 
@@ -47,20 +46,5 @@ class time_stepper
       return 0;
     }
 };
-
-// Euler Methods
-int forward_euler(ode_system&, double, Eigen::VectorXd &);
-int forward_euler_allt(ode_system&, double, Eigen::MatrixXd &);
-
-// Runge-Kutta Methods.
-int rk2(ode_system&, double, Eigen::VectorXd &);
-int rk2_allt(ode_system&, double, Eigen::MatrixXd &);
-int rk4(ode_system&, double, Eigen::VectorXd &);
-int rk4_allt(ode_system&, double, Eigen::MatrixXd &);
-
-// Parareal Method.
-int parareal(ode_system&, time_stepper, time_stepper, int, Eigen::MatrixXd &);
-int pipelined_parareal(ode_system&, time_stepper, time_stepper, int, Eigen::MatrixXd &);
-
 
 #endif
