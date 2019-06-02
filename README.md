@@ -21,10 +21,23 @@ parareal algorithm:
 
 If you would like to compile and run this code, there's a few requirements.
 First, you must have a gcc compiler compliant with the C++11 standard, and
-OpenMP installed. In addition, you must have access to the make and ar unix
-tools. 
+OpenMP installed. In addition, you must have access to the make unix tool. 
 
-First, you must compile the parareal library, to do so cd into
-`src/ode_integrators/` and then call `make`. This will construct the object file
-`lib_parareal.a`. Now anytime you want to use the library, include the
-`integrators.h` file, and link `lib_parareal.a`.
+After this, Parareal is a header-only library and therefore all you need to do
+is include the relevant .h files after adding the `include` directory to your
+include path. For example, a sample compilation call would be:
+
+```
+g++ -std=c++11 -I /path/to/Parareal/include sample.c
+```
+
+In your program, you should always include Eigen and the core file. The core
+file contains the typedefs and classes needed to interact with the library, and
+the library itself uses Eigen's datastructures internally.
+
+```c
+#include <Eigen/Core>
+#include <Parareal/core.h>
+```
+
+There is currently no way to statically link to this library.
