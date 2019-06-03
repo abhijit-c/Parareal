@@ -1,7 +1,7 @@
 #ifndef CORE_H_INCLUDED
 #define CORE_H_INCLUDED
 
-#include <Eigen/Core>
+#include <Eigen/Dense>
 #include <functional>
 
 class ode_system; class time_stepper;
