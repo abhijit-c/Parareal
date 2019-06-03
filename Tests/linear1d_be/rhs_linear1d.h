@@ -13,4 +13,12 @@ linear1d(double t, Eigen::VectorXd &yf, Eigen::VectorXd &dydt)
   return 0;
 }
 
+// Jacobian of (LAMBDA)*u
+inline int 
+linear1d_jac(double t, Eigen::VectorXd &yf, Eigen::MatrixXd &J)
+{
+  J(0,0) = LAMBDA;
+  return 0;
+}
+
 #endif
